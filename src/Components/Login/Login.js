@@ -56,13 +56,13 @@ const Login = () => {
 
         <Grid container >
           <Grid item xs={6}>
-            <Button variant="outlined" startIcon={<GoogleIcon />} onClick={signInWithGoogle}>
+            <Button variant="outlined" startIcon={<GoogleIcon />} onClick={() => signInWithGoogle(navigate)}>
               Sign in
             </Button>
           </Grid>
 
           <Grid item xs={6} >
-            <Button variant="outlined" startIcon={<FacebookIcon />} onClick={signInWithFacebook}>
+            <Button variant="outlined" startIcon={<FacebookIcon />} onClick={() => signInWithFacebook(navigate)}>
               Sign in
             </Button>
           </Grid>

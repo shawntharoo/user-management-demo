@@ -1,25 +1,33 @@
 import './App.css';
 import Login from './Components/Login/Login';
 import Home from './Components/Home/Home';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ResponsiveAppBar from './Components/AppBar/Appbar';
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import ProtectedRouteComponent from './Components/Common/Protectedroutes';
+import { connect } from 'react-redux';
 
-
-function App() {
+function App(props) {
   return (
     <div className="App">
-      <header className="App-header">
+      <ResponsiveAppBar />
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />}>
+        <Route path="/login" element={<Login />}>
         </Route>
-        <Route path="/home" element={<Home />}>
+        <Route path="/home" element={ <ProtectedRouteComponent isAuthenticated={props.authentication}><Home /></ProtectedRouteComponent>}>
         </Route>
       </Routes>
-    </BrowserRouter>
-        {/* <Login></Login> */}
-      </header>
+      </BrowserRouter>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    authentication: state.authentication,
+  };
+};
+
+export default connect(
+  mapStateToProps
+)(App)

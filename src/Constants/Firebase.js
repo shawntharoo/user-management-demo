@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithEmailAndPassword , signInWithPopup } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,7 +25,7 @@ export const auth = getAuth(app)
 const provider = new GoogleAuthProvider()
 const fprovider = new FacebookAuthProvider()
 
-export const signInWithGoogle = () => {
+export const signInWithGoogle = (navigate) => {
     signInWithPopup(auth, provider).then((results) => {
         const name = results.user.displayName
         const email = results.user.email
@@ -34,12 +34,13 @@ export const signInWithGoogle = () => {
         localStorage.setItem("name", name)
         localStorage.setItem("email", email)
         localStorage.setItem("profilePic", profilePic)
+        navigate('/home');
     }).catch((error) => {
         console.log(error)
     })
 }
 
-export const signInWithFacebook = () => {
+export const signInWithFacebook = (navigate) => {
     signInWithPopup(auth, fprovider).then((results) => {
         const name = results.user.displayName
         const email = results.user.email
@@ -48,14 +49,14 @@ export const signInWithFacebook = () => {
         localStorage.setItem("name", name)
         localStorage.setItem("email", email)
         localStorage.setItem("profilePic", profilePic)
+        navigate('/home');
     }).catch((error) => {
         console.log(error)
     })
 }
 
 export const signInWithCredential = (credential, navigate) => {
-    navigate('/home');
-    createUserWithEmailAndPassword(auth, credential.email, credential.password)
+    signInWithEmailAndPassword (auth, credential.email, credential.password)
         .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;

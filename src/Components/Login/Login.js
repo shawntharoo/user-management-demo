@@ -4,10 +4,11 @@ import { Avatar, Grid, Paper, TextField, Checkbox, Button, FormControlLabel, Typ
 import LockIcon from '@mui/icons-material/Lock';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
-import { signInWithGoogle, signInWithFacebook, signInWithCredential } from '../../Constants/Firebase';
+import { signInWithGoogle, signInWithFacebook, signInWithCredential } from '../../Actions/Authaction';
 import { useNavigate } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const Login = () => {
+const Login = (props) => {
   const navigate = useNavigate();
   const [checked] = React.useState(true);
   const paperstyle = { padding: 20, height: '70vh', width: 280, margin: '20px auto' }
@@ -18,7 +19,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => signInWithCredential(data, navigate);
+  const onSubmit = (data) => props.signInWithCredential(data, navigate);
 
   return (
     <Grid>
@@ -56,25 +57,35 @@ const Login = () => {
 
         <Grid container >
           <Grid item xs={6}>
-            <Button variant="outlined" startIcon={<GoogleIcon />} onClick={() => signInWithGoogle(navigate)}>
+            <Button variant="outlined" startIcon={<GoogleIcon />} onClick={() => props.signInWithGoogle(navigate)}>
               Sign in
             </Button>
           </Grid>
 
           <Grid item xs={6} >
-            <Button variant="outlined" startIcon={<FacebookIcon />} onClick={() => signInWithFacebook(navigate)}>
+            <Button variant="outlined" startIcon={<FacebookIcon />} onClick={() => props.signInWithFacebook(navigate)}>
               Sign in
             </Button>
           </Grid>
         </Grid>
-
-
-        <h1>{localStorage.getItem("name")}</h1>
-        <h1>{localStorage.getItem("email")}</h1>
-        <img src={localStorage.getItem("profilePic")} alt="Google profile pic" />
       </Paper>
     </Grid>
   )
 }
 
-export default Login
+function mapStateToProps(state) {
+  return { authentication: state.authentication };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    signInWithGoogle: (navigate) => dispatch(signInWithGoogle(navigate)),
+    signInWithFacebook: (navigate) => dispatch(signInWithFacebook(navigate)),
+    signInWithCredential: (user, navigate) => dispatch(signInWithCredential(user, navigate))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login)

@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 //import { getAnalytics } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithEmailAndPassword , signInWithPopup } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,53 +20,5 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
-export const auth = getAuth(app)
-
-const provider = new GoogleAuthProvider()
-const fprovider = new FacebookAuthProvider()
-
-export const signInWithGoogle = (navigate) => {
-    signInWithPopup(auth, provider).then((results) => {
-        const name = results.user.displayName
-        const email = results.user.email
-        const profilePic = results.user.photoURL
-
-        localStorage.setItem("name", name)
-        localStorage.setItem("email", email)
-        localStorage.setItem("profilePic", profilePic)
-        navigate('/home');
-    }).catch((error) => {
-        console.log(error)
-    })
-}
-
-export const signInWithFacebook = (navigate) => {
-    signInWithPopup(auth, fprovider).then((results) => {
-        const name = results.user.displayName
-        const email = results.user.email
-        const profilePic = results.user.photoURL
-
-        localStorage.setItem("name", name)
-        localStorage.setItem("email", email)
-        localStorage.setItem("profilePic", profilePic)
-        navigate('/home');
-    }).catch((error) => {
-        console.log(error)
-    })
-}
-
-export const signInWithCredential = (credential, navigate) => {
-    signInWithEmailAndPassword (auth, credential.email, credential.password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            console.log(user)
-            navigate('/home');
-            // ...
-        })
-        .catch((error) => {
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            console.log(error)
-        });
-}
+ const auth = getAuth(app);
+ export default auth

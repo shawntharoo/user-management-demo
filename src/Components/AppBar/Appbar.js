@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {connect} from 'react-redux'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,11 +13,14 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import { signOut } from '../../Actions/Authaction'
+import { useNavigate } from 'react-router-dom';
 
 const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Logout'];
 
-const ResponsiveAppBar = () => {
+const ResponsiveAppBar = (props) => {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -34,6 +38,14 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleMenuItemClick = (event) => {
+    if(event === "Logout"){
+      props.signOut(navigate)
+    }
+    setAnchorElUser(null);
+  };
+
 
   return (
     <AppBar position="static">
@@ -148,7 +160,7 @@ const ResponsiveAppBar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={()=>handleMenuItemClick(setting)}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -159,4 +171,17 @@ const ResponsiveAppBar = () => {
     </AppBar>
   );
 };
-export default ResponsiveAppBar;
+
+const mapStateToProps = (state) => {
+  return { authentication : state.authentication }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signOut : (navigate) => dispatch(signOut(navigate))
+  }
+}
+
+export default connect (
+  mapStateToProps,
+  mapDispatchToProps
+) (ResponsiveAppBar)

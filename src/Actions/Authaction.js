@@ -81,19 +81,19 @@ export const currentUserSession = () => (dispatch, getState) => {
     })
 }
 
-export const signOut = () => (dispatch, getState) => {
-    try {
+export const signOut = (navigate) => (dispatch, getState) => {
+    auth.signOut().then(() => {
         dispatch({
             type: USER_SESSION,
             payload: true
         })
-    } catch (error) {
-        console.log('error signing out: ', error);
+        navigate('/login')
+    }).catch((error) => {
         dispatch({
             type: USER_SESSION,
             payload: false
         })
-    }
+    })
 }
 
 

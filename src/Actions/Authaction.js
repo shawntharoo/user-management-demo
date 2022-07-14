@@ -7,7 +7,6 @@ const provider = new GoogleAuthProvider()
 const fprovider = new FacebookAuthProvider()
 
 export const signInWithCredential = (credential, navigate) => (dispatch, getState) => {
-    console.log(credential)
     signInWithEmailAndPassword(auth, credential.Username, credential.Password)
         .then((userCredential) => {
             // Signed in 
@@ -35,13 +34,13 @@ export const signInWithGoogle = (navigate) => (dispatch, getState) =>{
         const name = results.user.displayName
         const email = results.user.email
         const profilePic = results.user.photoURL
-
+        const user = results.user
         localStorage.setItem("name", name)
         localStorage.setItem("email", email)
         localStorage.setItem("profilePic", profilePic)
         dispatch({
             type: USER_SESSION,
-            payload: results.user
+            payload: user
         })
         navigate('/home')
     }).catch((error) => {
@@ -57,13 +56,13 @@ export const signInWithFacebook = (navigate) => (dispatch, getState) =>{
         const name = results.user.displayName
         const email = results.user.email
         const profilePic = results.user.photoURL
-
+        const user = results.user
         localStorage.setItem("name", name)
         localStorage.setItem("email", email)
         localStorage.setItem("profilePic", profilePic)
         dispatch({
             type: USER_SESSION,
-            payload: results.user
+            payload: user
         })
         navigate('/home')
     }).catch((error) => {
@@ -75,10 +74,21 @@ export const signInWithFacebook = (navigate) => (dispatch, getState) =>{
 }
 
 export const currentUserSession = () => (dispatch, getState) => {
-    dispatch({
-        type: USER_SESSION,
-        payload: null
-    })
+    auth.onAuthStateChanged(user => {
+        console.log(user)
+        if (user) {
+            dispatch({
+                type: USER_SESSION,
+                payload: user
+            })
+        } else {
+            dispatch({
+                type: USER_SESSION,
+                payload: null
+            })
+        }
+      });
+
 }
 
 export const signOut = (navigate) => (dispatch, getState) => {
